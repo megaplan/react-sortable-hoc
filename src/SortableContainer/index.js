@@ -293,7 +293,14 @@ export default function sortableContainer(WrappedComponent, config = {withRef: f
           }
         });
 
-        this.helper = this.document.body.appendChild(clonedNode);
+        if (clonedNode.localName === 'tr') {
+            this.helper = findDOMNode(node).parentNode.appendChild(clonedNode)
+            this.helper.childNodes.forEach((cell, index) => {
+                cell.width = node.cells[index].clientWidth
+            })
+        } else {
+            this.helper = this.document.body.appendChild(clonedNode);
+        }
 
         this.helper.style.position = 'fixed';
         this.helper.style.top = `${this.boundingClientRect.top - margin.top}px`;
